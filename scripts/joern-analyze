@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+project="${1:-.}"
+language="${JOERN_LANGUAGE:-python}"
+exec joern-agent validate "$project" --language "$language" --json

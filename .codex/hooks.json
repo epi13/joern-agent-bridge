@@ -1,0 +1,30 @@
+{
+  "description": "Enforce real Joern analysis for graph-sensitive source changes.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "joern-agent-hook session-start",
+            "timeout": 30,
+            "statusMessage": "Checking Joern integration"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "joern-agent-hook stop",
+            "timeout": 30,
+            "statusMessage": "Checking Joern graph evidence"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+[features]
+hooks = true
+
+[mcp_servers.joern]
+enabled = true
+required = true
+command = "joern-agent-mcp"
+startup_timeout_sec = 30.0
+tool_timeout_sec = 600.0
+default_tools_approval_mode = "auto"

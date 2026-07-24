@@ -1,0 +1,108 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "joern-agent-bridge"
+version = "0.1.0"
+description = "Secure, bounded Joern CPG tools for Codex and other MCP clients"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Apache-2.0" }
+authors = [{ name = "epi13" }]
+keywords = ["joern", "mcp", "codex", "code-property-graph", "static-analysis"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "License :: OSI Approved :: Apache Software License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Topic :: Software Development :: Quality Assurance",
+  "Topic :: Security",
+]
+dependencies = [
+  "filelock>=3.16,<4",
+  "mcp>=1.26,<2",
+  "platformdirs>=4.3,<5",
+  "pydantic>=2.10,<3",
+  "typer>=0.16,<1",
+]
+
+[project.optional-dependencies]
+dev = [
+  "build>=1.2,<2",
+  "coverage[toml]>=7.6,<8",
+  "detect-secrets>=1.5,<2",
+  "mypy>=1.14,<2",
+  "pip-audit>=2.8,<3",
+  "pytest>=9.0.3,<10",
+  "pytest-cov>=6,<7",
+  "ruff>=0.9,<1",
+]
+
+[project.scripts]
+joern-agent = "joern_agent_bridge.cli:main"
+joern-agent-mcp = "joern_agent_bridge.mcp_server:main"
+joern-agent-hook = "joern_agent_bridge.hook_entry:main"
+
+[project.urls]
+Homepage = "https://github.com/epi13/joern-agent-bridge"
+Repository = "https://github.com/epi13/joern-agent-bridge"
+Issues = "https://github.com/epi13/joern-agent-bridge/issues"
+Changelog = "https://github.com/epi13/joern-agent-bridge/blob/main/CHANGELOG.md"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/joern_agent_bridge"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "/src",
+  "/tests",
+  "/tools",
+  "/scripts",
+  "/examples",
+  "/docs",
+  "/.codex",
+  "/LICENSE",
+  "/README.md",
+  "/AGENTS.md",
+  "/pyproject.toml",
+]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "S", "SIM", "RUF"]
+ignore = ["B008", "E501", "S101"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S603", "S607"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+packages = ["joern_agent_bridge"]
+
+[tool.pytest.ini_options]
+addopts = "-ra --strict-config --strict-markers"
+testpaths = ["tests"]
+markers = [
+  "integration: requires a working Joern installation",
+  "slow: may take more than ten seconds",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["joern_agent_bridge"]
+omit = [
+  "*/joern_agent_bridge/cli.py",
+  "*/joern_agent_bridge/hook_entry.py",
+  "*/joern_agent_bridge/mcp_server.py",
+]
+
+[tool.coverage.report]
+fail_under = 80
+show_missing = true
+skip_covered = true

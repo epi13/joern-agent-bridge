@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+version="${JOERN_VERSION:-v4.0.583}"
+archive_sha256="${JOERN_ARCHIVE_SHA256:-74e072163b7f1fc1a371a265ca6f1a94a54507eb20bb831babb288d40f4d278e}"
+archive_sha512="${JOERN_ARCHIVE_SHA512:-5eb2fb4b2011585d11cc7e5ea21af99afc66cee7535ff0a2724647952590c300a84afe23df3317d19667a55b8b5bac46b74172e63a687282753ec9f544314c3a}"
+cache_dir="${XDG_CACHE_HOME:-$HOME/.cache}/joern/$version"
+install_dir="${XDG_DATA_HOME:-$HOME/.local/share}/joern/$version"
+archive="$cache_dir/joern-cli.zip"
+
+mkdir -p "$cache_dir" "$install_dir" "$HOME/.local/bin"
+curl --fail --location --retry 5 --continue-at - \
+  --output "$archive" \
+  "https://github.com/joernio/joern/releases/download/$version/joern-cli.zip"
+printf '%s  %s\n' "$archive_sha256" "$archive" | sha256sum --check -
+printf '%s  %s\n' "$archive_sha512" "$archive" | sha512sum --check -
+unzip -q -o "$archive" -d "$install_dir"
+
+for executable in joern joern-parse joern-export joern-scan joern-slice joern-flow; do
+  if [[ -x "$install_dir/joern-cli/$executable" ]]; then
+    ln -sfn "$install_dir/joern-cli/$executable" "$HOME/.local/bin/$executable"
+  fi
+done
+printf 'Installed Joern %s at %s\n' "$version" "$install_dir"

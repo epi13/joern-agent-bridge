@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+phase="${1:-post}"
+project="${2:-.}"
+language="${JOERN_LANGUAGE:-python}"
+case "$phase" in
+  baseline|post) ;;
+  *) echo "usage: scripts/joern-snapshot baseline|post [project]" >&2; exit 2 ;;
+esac
+exec joern-agent snapshot "$project" --phase "$phase" \
+  --output "$project/.joern-agent/$phase.json" --language "$language" --json

@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+demo_root="$(mktemp -d)"
+trap 'rm -rf "$demo_root"' EXIT
+cp examples/c-demo/demo.c "$demo_root/demo.c"
+JOERN_AGENT_APPROVED_ROOTS="$demo_root" joern-agent snapshot "$demo_root" \
+  --phase baseline --output "$demo_root/baseline.json" --json
+patch -d "$demo_root" -p1 < examples/c-demo/after.patch
+JOERN_AGENT_APPROVED_ROOTS="$demo_root" joern-agent snapshot "$demo_root" \
+  --phase post --output "$demo_root/post.json" --json
+joern-agent compare "$demo_root/baseline.json" "$demo_root/post.json" --json

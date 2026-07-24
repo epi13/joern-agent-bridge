@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+project="${1:-.}"
+language="${JOERN_LANGUAGE:-python}"
+baseline="$project/.joern-agent/baseline.json"
+if [[ ! -f "$baseline" ]]; then
+  echo "Missing baseline snapshot: $baseline" >&2
+  echo "Run scripts/joern-snapshot baseline before graph-sensitive edits." >&2
+  exit 2
+fi
+exec joern-agent validate "$project" --baseline "$baseline" \
+  --post "$project/.joern-agent/post.json" --language "$language" --json

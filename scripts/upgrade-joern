@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+if [[ $# -ne 3 ]]; then
+  echo "usage: scripts/upgrade-joern <release-tag> <zip-sha256> <zip-sha512>" >&2
+  exit 2
+fi
+JOERN_VERSION="$1" JOERN_ARCHIVE_SHA256="$2" JOERN_ARCHIVE_SHA512="$3" \
+  exec "$(dirname "$0")/install-joern"

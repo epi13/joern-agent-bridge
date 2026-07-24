@@ -1,0 +1,19 @@
+name: Feature request
+description: Propose a bounded graph-aware capability
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use case
+      description: Which graph question cannot be answered today?
+    validations:
+      required: true
+  - type: textarea
+    id: bounds
+    attributes:
+      label: Safety and bounds
+      description: Describe path confinement, cost bounds, and expected evidence.
+    validations:
+      required: true

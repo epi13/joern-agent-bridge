@@ -1,0 +1,13 @@
+--- a/demo.c
++++ b/demo.c
+@@ -54,7 +54,4 @@ static int process_request(const char *input, int unsafe_mode)
+     unsigned value = checksum(input);
+-    if (unsafe_mode != 0) {
+-        unsafe_sink(input);
+-    } else {
+-        safe_sink(value);
+-    }
++    (void)unsafe_mode;
++    safe_sink(value);
+     return RESULT_OK;
+ }

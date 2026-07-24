@@ -1,0 +1,276 @@
+{
+  "schema_version": 1,
+  "status": "complete",
+  "repository_commit": "4949590c566f008f6b2fae2bebeb20f44c9b7b9e",
+  "working_tree_hash": "fdfc9dca45800936e1d94033b8c761f2b2890e2aa3e7865ea21e2a815a685fda",
+  "relevant_diff_hash": "d3f9324dd5cac4890da1dad162e53adef3105583667169640168fe3326f4af6e",
+  "joern_version": "4.0.583",
+  "language": "c",
+  "source_root": "examples/c-demo",
+  "query_definitions": [
+    "snapshot(methods,cfg_summaries,callees,control_dependencies)"
+  ],
+  "analyzed_methods": [
+    {
+      "name": "validate_input",
+      "astParentFullName": "demo.c:<global>",
+      "_id": 107374182402,
+      "signature": "int(char*)",
+      "astParentType": "TYPE_DECL",
+      "lineNumberEnd": 20,
+      "_label": "METHOD",
+      "columnNumberEnd": 1,
+      "fullName": "validate_input",
+      "genericSignature": "<empty>",
+      "code": "static int validate_input(const char *input)\n{\n    if (input == NULL || input[0] == '\\0') {\n        return RESULT_INVALID;\n    }\n    if (strlen(input) > 32U) {\n        return RESULT_TOO_LONG;\n    }\n    return RESULT_OK;\n}",
+      "isExternal": false,
+      "lineNumber": 11,
+      "columnNumber": 1,
+      "order": 1,
+      "filename": "demo.c"
+    },
+    {
+      "name": "checksum",
+      "astParentFullName": "demo.c:<global>",
+      "_id": 107374182403,
+      "signature": "unsigned(char*)",
+      "astParentType": "TYPE_DECL",
+      "lineNumberEnd": 33,
+      "_label": "METHOD",
+      "columnNumberEnd": 1,
+      "fullName": "checksum",
+      "genericSignature": "<empty>",
+      "code": "static unsigned checksum(const char *input)\n{\n    unsigned value = 0U;\n    for (size_t index = 0U; input[index] != '\\0'; ++index) {\n        if (input[index] >= 'a' && input[index] <= 'z') {\n            value += (unsigned)(input[index] - 'a' + 1);\n        } else {\n            value += (unsigned)(unsigned char)input[index];\n        }\n    }\n    return value;\n}",
+      "isExternal": false,
+      "lineNumber": 22,
+      "columnNumber": 1,
+      "order": 1,
+      "filename": "demo.c"
+    },
+    {
+      "name": "safe_sink",
+      "astParentFullName": "demo.c:<global>",
+      "_id": 107374182404,
+      "signature": "void(unsigned)",
+      "astParentType": "TYPE_DECL",
+      "lineNumberEnd": 38,
+      "_label": "METHOD",
+      "columnNumberEnd": 1,
+      "fullName": "safe_sink",
+      "genericSignature": "<empty>",
+      "code": "static void safe_sink(unsigned value)\n{\n    printf(\"checksum=%u\\n\", value);\n}",
+      "isExternal": false,
+      "lineNumber": 35,
+      "columnNumber": 1,
+      "order": 1,
+      "filename": "demo.c"
+    },
+    {
+      "name": "unsafe_sink",
+      "astParentFullName": "demo.c:<global>",
+      "_id": 107374182405,
+      "signature": "void(char*)",
+      "astParentType": "TYPE_DECL",
+      "lineNumberEnd": 44,
+      "_label": "METHOD",
+      "columnNumberEnd": 1,
+      "fullName": "unsafe_sink",
+      "genericSignature": "<empty>",
+      "code": "static void unsafe_sink(const char *value)\n{\n    /* Deliberately unsafe but harmless: demonstrates an unsanitized source-to-sink path. */\n    printf(\"raw=%s\\n\", value);\n}",
+      "isExternal": false,
+      "lineNumber": 40,
+      "columnNumber": 1,
+      "order": 1,
+      "filename": "demo.c"
+    },
+    {
+      "name": "process_request",
+      "astParentFullName": "demo.c:<global>",
+      "_id": 107374182406,
+      "signature": "int(char*,int)",
+      "astParentType": "TYPE_DECL",
+      "lineNumberEnd": 58,
+      "_label": "METHOD",
+      "columnNumberEnd": 1,
+      "fullName": "process_request",
+      "genericSignature": "<empty>",
+      "code": "static int process_request(const char *input, int unsafe_mode)\n{\n    int status = validate_input(input);\n    if (status != RESULT_OK) {\n        fprintf(stderr, \"validation failed: %d\\n\", status);\n        return status;\n    }\n\n    unsigned value = checksum(input);\n    (void)unsafe_mode;\n    safe_sink(value);\n    return RESULT_OK;\n}",
+      "isExternal": false,
+      "lineNumber": 46,
+      "columnNumber": 1,
+      "order": 1,
+      "filename": "demo.c"
+    },
+    {
+      "name": "main",
+      "astParentFullName": "demo.c:<global>",
+      "_id": 107374182407,
+      "signature": "int(int,char**)",
+      "astParentType": "TYPE_DECL",
+      "lineNumberEnd": 68,
+      "_label": "METHOD",
+      "columnNumberEnd": 1,
+      "fullName": "main",
+      "genericSignature": "<empty>",
+      "code": "int main(int argc, char **argv)\n{\n    if (argc < 2) {\n        fprintf(stderr, \"usage: %s VALUE [--unsafe]\\n\", argv[0]);\n        return EXIT_FAILURE;\n    }\n    int unsafe_mode = argc > 2 && strcmp(argv[2], \"--unsafe\") == 0;\n    return process_request(argv[1], unsafe_mode);\n}",
+      "isExternal": false,
+      "lineNumber": 60,
+      "columnNumber": 1,
+      "order": 1,
+      "filename": "demo.c"
+    }
+  ],
+  "method_cfg_summaries": [
+    {
+      "method": "validate_input",
+      "full_name": "validate_input",
+      "node_count": 24
+    },
+    {
+      "method": "checksum",
+      "full_name": "checksum",
+      "node_count": 52
+    },
+    {
+      "method": "safe_sink",
+      "full_name": "safe_sink",
+      "node_count": 4
+    },
+    {
+      "method": "unsafe_sink",
+      "full_name": "unsafe_sink",
+      "node_count": 4
+    },
+    {
+      "method": "process_request",
+      "full_name": "process_request",
+      "node_count": 27
+    },
+    {
+      "method": "main",
+      "full_name": "main",
+      "node_count": 33
+    }
+  ],
+  "call_relationships": [
+    {
+      "caller": "validate_input",
+      "callee": "strlen",
+      "callee_full_name": "strlen"
+    },
+    {
+      "caller": "safe_sink",
+      "callee": "printf",
+      "callee_full_name": "printf"
+    },
+    {
+      "caller": "unsafe_sink",
+      "callee": "printf",
+      "callee_full_name": "printf"
+    },
+    {
+      "caller": "process_request",
+      "callee": "safe_sink",
+      "callee_full_name": "safe_sink"
+    },
+    {
+      "caller": "process_request",
+      "callee": "validate_input",
+      "callee_full_name": "validate_input"
+    },
+    {
+      "caller": "process_request",
+      "callee": "checksum",
+      "callee_full_name": "checksum"
+    },
+    {
+      "caller": "process_request",
+      "callee": "fprintf",
+      "callee_full_name": "fprintf"
+    },
+    {
+      "caller": "main",
+      "callee": "process_request",
+      "callee_full_name": "process_request"
+    },
+    {
+      "caller": "main",
+      "callee": "fprintf",
+      "callee_full_name": "fprintf"
+    },
+    {
+      "caller": "main",
+      "callee": "strcmp",
+      "callee_full_name": "strcmp"
+    }
+  ],
+  "control_dependencies": [
+    {
+      "method": "validate_input",
+      "line": 13,
+      "node_id": "30064771075",
+      "code": "input == NULL || input[0] == '\\0'",
+      "column": 9
+    },
+    {
+      "method": "validate_input",
+      "line": 16,
+      "node_id": "30064771079",
+      "code": "strlen(input) > 32U",
+      "column": 9
+    },
+    {
+      "method": "validate_input",
+      "line": 13,
+      "node_id": "30064771076",
+      "code": "input == NULL",
+      "column": 9
+    },
+    {
+      "method": "checksum",
+      "line": 25,
+      "node_id": "30064771083",
+      "code": "input[index] != '\\0'",
+      "column": 29
+    },
+    {
+      "method": "checksum",
+      "line": 26,
+      "node_id": "30064771087",
+      "code": "input[index] >= 'a'",
+      "column": 13
+    },
+    {
+      "method": "checksum",
+      "line": 26,
+      "node_id": "30064771086",
+      "code": "input[index] >= 'a' && input[index] <= 'z'",
+      "column": 13
+    },
+    {
+      "method": "process_request",
+      "line": 49,
+      "node_id": "30064771104",
+      "code": "status != RESULT_OK",
+      "column": 9
+    },
+    {
+      "method": "main",
+      "line": 62,
+      "node_id": "30064771110",
+      "code": "argc < 2",
+      "column": 9
+    },
+    {
+      "method": "main",
+      "line": 66,
+      "node_id": "30064771115",
+      "code": "argc > 2",
+      "column": 23
+    }
+  ],
+  "warnings": [],
+  "timeout_seconds": 300.0,
+  "timestamp": "2026-07-24T23:13:23.882942+00:00",
+  "phase": "post"
+}

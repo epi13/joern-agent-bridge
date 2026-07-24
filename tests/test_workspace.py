@@ -31,6 +31,15 @@ def test_unsupported_language_fails(tmp_path: Path) -> None:
         source_state(tmp_path, "brainfuck")
 
 
+def test_source_state_ignores_virtual_environments(tmp_path: Path) -> None:
+    (tmp_path / "main.py").write_text("print('source')\n")
+    before = source_state(tmp_path, "python")
+    ignored = tmp_path / ".venv" / "lib"
+    ignored.mkdir(parents=True)
+    (ignored / "dependency.py").write_text("print('dependency')\n")
+    assert source_state(tmp_path, "python") == before
+
+
 def test_cache_reuse_and_invalidation(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     source = tmp_path / "src"
     source.mkdir()

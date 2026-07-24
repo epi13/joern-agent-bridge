@@ -25,6 +25,29 @@ _SOURCE_SUFFIXES = {
     "kotlin": {".kt", ".kts"},
     "php": {".php"},
 }
+_FRONTEND_ALIASES = {
+    "c": "c",
+    "c++": "c",
+    "java": "javasrc",
+    "javascript": "jssrc",
+    "python": "pythonsrc",
+    "kotlin": "kotlin",
+    "php": "php",
+}
+_EXCLUDED_DIRECTORIES = {
+    ".git",
+    ".joern-agent",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".tox",
+    ".venv",
+    "__pycache__",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+}
 
 
 def hash_bytes(*values: bytes) -> str:
@@ -49,8 +72,7 @@ def source_state(source_root: Path, language: str) -> str:
         for path in source_root.rglob("*")
         if path.is_file()
         and path.suffix.lower() in suffixes
-        and ".git" not in path.parts
-        and ".joern-agent" not in path.parts
+        and not _EXCLUDED_DIRECTORIES.intersection(path.relative_to(source_root).parts)
     )
     if not files:
         raise BridgeError(
@@ -128,7 +150,7 @@ class CpgWorkspace:
             argv: list[str | Path] = [
                 installation.parse,
                 "--language",
-                language,
+                _FRONTEND_ALIASES[language],
                 "--output",
                 temporary,
                 source_root,

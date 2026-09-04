@@ -21,7 +21,7 @@ classifiers = [
 ]
 dependencies = [
   "filelock>=3.16,<4",
-  "mcp>=1.26,<2",
+  "mcp>=1.26,<3",
   "platformdirs>=4.3,<5",
   "pydantic>=2.10,<3",
   "typer>=0.16,<1",
